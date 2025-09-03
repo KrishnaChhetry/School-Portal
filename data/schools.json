@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Green Valley High School",
+    "address": "12 Sunrise Avenue, Near Central Park",
+    "city": "Mumbai",
+    "state": "Maharastra",
+    "contact": 1234567890,
+    "image": "/schoolImages/l1vr3r7v5s8zee5eunonxjbgj.webp",
+    "email_id": "contact@greenvalley.edu"
+  },
+  {
+    "id": 2,
+    "name": "Blue Horizon Public School",
+    "address": "45 Ocean Drive, Opp. City Mall",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "contact": 1234567890,
+    "image": "/schoolImages/ro7onzs5uranzgcdau74w4dtm.jpg",
+    "email_id": "info@bluehorizon.ac.in"
+  },
+  {
+    "id": 3,
+    "name": "Silver Oak International",
+    "address": "78 Maple Street, Beside Riverfront",
+    "city": "Imphal",
+    "state": "Manipur",
+    "contact": 1234567890,
+    "image": "/schoolImages/xbwcqmqpoj83aue0wz5evm4d5.jpg",
+    "email_id": "silveroak@gmail.com"
+  }
+]

@@ -3,6 +3,35 @@ import fs from 'fs';
 import path from 'path';
 import { getPool, ensureSchema } from '@/lib/db';
 
+const JSON_STORE = path.join(process.cwd(), 'data', 'schools.json');
+const ensureJsonStore = () => {
+  const dir = path.dirname(JSON_STORE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(JSON_STORE)) fs.writeFileSync(JSON_STORE, JSON.stringify([]));
+};
+const readJsonSchools = () => {
+  ensureJsonStore();
+  try {
+    const raw = fs.readFileSync(JSON_STORE, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+};
+const writeJsonSchools = (schools) => {
+  ensureJsonStore();
+  fs.writeFileSync(JSON_STORE, JSON.stringify(schools, null, 2));
+};
+
+function hasMysqlEnv() {
+  return Boolean(
+    process.env.MYSQL_HOST &&
+    process.env.MYSQL_USER &&
+    process.env.MYSQL_PASSWORD &&
+    process.env.MYSQL_DATABASE
+  );
+}
+
 export const config = {
   api: {
     bodyParser: false,
@@ -32,10 +61,14 @@ function parseForm(req) {
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      await ensureSchema();
-      const pool = getPool();
-      const [rows] = await pool.query('SELECT id, name, address, city, image FROM schools ORDER BY id DESC');
-      return res.status(200).json({ schools: rows });
+      if (hasMysqlEnv()) {
+        await ensureSchema();
+        const pool = getPool();
+        const [rows] = await pool.query('SELECT id, name, address, city, image FROM schools ORDER BY id DESC');
+        return res.status(200).json({ schools: rows });
+      }
+      const schools = readJsonSchools();
+      return res.status(200).json({ schools });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to fetch schools' });
@@ -44,7 +77,6 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      await ensureSchema();
       const { fields, files } = await parseForm(req);
 
       const name = String(fields.name || '').trim();
@@ -59,19 +91,31 @@ export default async function handler(req, res) {
       }
 
       let imageRelPath = null;
-      const imageFile = files.image;
-      if (imageFile && !Array.isArray(imageFile)) {
-        const fileName = path.basename(imageFile.newFilename || imageFile.originalFilename);
-        imageRelPath = path.posix.join('/schoolImages', fileName);
+      const imageFileCandidate = files.image;
+      const imageFile = Array.isArray(imageFileCandidate) ? imageFileCandidate[0] : imageFileCandidate;
+      if (imageFile) {
+        const fileName = path.basename(imageFile.newFilename || imageFile.originalFilename || imageFile.filepath || '');
+        if (fileName) {
+          imageRelPath = path.posix.join('/schoolImages', fileName);
+        }
       }
 
-      const pool = getPool();
-      const [result] = await pool.query(
-        'INSERT INTO schools (name, address, city, state, contact, image, email_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [name, address, city, state, contact, imageRelPath, email_id]
-      );
+      if (hasMysqlEnv()) {
+        await ensureSchema();
+        const pool = getPool();
+        const [result] = await pool.query(
+          'INSERT INTO schools (name, address, city, state, contact, image, email_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [name, address, city, state, contact, imageRelPath, email_id]
+        );
+        return res.status(201).json({ id: result.insertId });
+      }
 
-      return res.status(201).json({ id: result.insertId });
+      const schools = readJsonSchools();
+      const id = schools.length ? Math.max(...schools.map(s => s.id || 0)) + 1 : 1;
+      const newSchool = { id, name, address, city, state, contact, image: imageRelPath, email_id };
+      schools.push(newSchool);
+      writeJsonSchools(schools);
+      return res.status(201).json({ id });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to add school' });
