@@ -1,8 +1,9 @@
 # 🏫 School Information Management – Web Development Assignment
 
 ## Link to the School Portal : 
-https://school-portal-wdx7.vercel.app/
-
+1. https://school-portal-wdx7.vercel.app/
+2. https://school-portal-wdx7.vercel.app/addSchool
+3. https://school-portal-wdx7.vercel.app/showSchools
 
 
 
@@ -72,6 +73,3 @@ It consists of **two responsive pages**:
    ```bash
    git clone https://github.com/KrishnaChhetry/School-Portal.git
    cd school-info-app
-
-2. http://localhost:3000/addSchool
-   http://localhost:3000/showSchools
