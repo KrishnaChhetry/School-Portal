@@ -1,5 +1,10 @@
 # 🏫 School Information Management – Web Development Assignment
 
+
+
+
+
+
 ## 📌 Project Summary
 This is a mini-project built using **Next.js** (React framework) and **MySQL**.  
 It consists of **two responsive pages**:
@@ -66,3 +71,6 @@ It consists of **two responsive pages**:
    ```bash
    git clone https://github.com/KrishnaChhetry/School-Portal.git
    cd school-info-app
+
+2. http://localhost:3000/addSchool
+   http://localhost:3000/showSchools
