@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,10 +28,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <header style={{ position: 'sticky', top: 0, zIndex: 10, backdropFilter: 'saturate(180%) blur(8px)', background: 'rgba(255,255,255,0.7)', padding: '12px 16px', borderBottom: '1px solid #eee' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <a href="/" style={{ fontWeight: 700, color: '#111827', textDecoration: 'none' }}>EduManager</a>
+            <Link href="/" style={{ fontWeight: 700, color: '#111827', textDecoration: 'none' }}>EduManager</Link>
             <nav style={{ display: 'flex', gap: 8 }}>
-              <a href="/showSchools" style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', textDecoration: 'none' }}>▦ View Schools</a>
-              <a href="/addSchool" style={{ padding: '8px 12px', borderRadius: 8, background: '#7c3aed', color: 'white', textDecoration: 'none' }}>＋ Add School</a>
+              <Link href="/showSchools" style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', textDecoration: 'none' }}>▦ View Schools</Link>
+              <Link href="/addSchool" style={{ padding: '8px 12px', borderRadius: 8, background: '#7c3aed', color: 'white', textDecoration: 'none' }}>＋ Add School</Link>
             </nav>
           </div>
         </header>
