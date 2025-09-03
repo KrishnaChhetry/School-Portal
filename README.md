@@ -1,6 +1,7 @@
 # 🏫 School Information Management – Web Development Assignment
 
-
+## Link to the School Portal : 
+https://school-portal-wdx7.vercel.app/
 
 
 
